@@ -12,6 +12,23 @@ include "view/header.php";
 if ((isset($_GET['act'])) && ($_GET['act'] != "")) {
     $act = $_GET['act'];
     switch ($act) {
+        case "listCart":
+            // Kiểm tra xem giỏ hàng có dữ liệu hay không
+            if (!empty($_SESSION['cart'])) {
+                $cart = $_SESSION['cart'];
+
+                // Tạo mảng chứa ID các sản phẩm trong giỏ hàng
+                $productId = array_column($cart, 'id');
+                
+                // Chuyển đôi mảng id thành một cuỗi để thực hiện truy vấn
+                $idList = implode(',', $productId);
+                
+                // Lấy sản phẩm trong bảng sản phẩm theo id
+                $dataDb = loadone_sanphamCart($idList);
+                // var_dump($dataDb);
+            }
+            include "view/listCartOrder.php";
+            break;
         case "sanpham":
             if ((isset($_POST['keyw']) && ($_POST['keyw'] != ""))) {
                 $keyw = $_POST['keyw'];

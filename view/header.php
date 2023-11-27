@@ -55,6 +55,10 @@
           <li class="dropdown">
             <a class="dropdownbtn" href="index.php?act=lienhe">Liên hệ</a>
           </li>
+          <li class="dropdown">
+            <a class="dropdownbtn" href="index.php?act=listCart">Giỏ hàng</a>
+            <span id="totalProduct"><?= !empty($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?></span>
+          </li>
         </ul>
       </div>
     </header>

@@ -13,6 +13,12 @@ function loadone_sanpham($id){
     return $sp;
 }
 
+function loadone_sanphamCart ($idList) {
+    $sql = 'SELECT * FROM sanpham WHERE id IN ('. $idList . ')';
+    $sanpham = pdo_query($sql);
+    return $sanpham;
+}
+
 function load_ten_dm($iddm){
     if($iddm>0){
     $sql="select * from sanpham where id=".$iddm;

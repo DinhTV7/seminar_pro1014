@@ -26,10 +26,12 @@
                     <a href="<?php echo $linksp ?>">
                         <b><?php echo $name ?></b>
                     </a>
-                    <p>
-                        <?php echo number_format($price) ?> <u>đ</u>
+                    <p style="color: red;">
+                        <b><?php echo number_format($price) ?> ₫</b>
                     </p>
-
+                    <div>
+                        <button data-id="<?= $id ?>" class="btnCart" onclick="addToCart(<?= $id ?>, '<?= $name ?>', <?= $price ?>)">Thêm vào giỏ hàng</button>
+                    </div>
                 </div>
             <?php
                 $i += 1;
@@ -45,3 +47,29 @@
     </div>
 </main>
 <script src="main.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    let totalProduct = document.getElementById('totalProduct');
+    function addToCart(productId, productName, productPrice) {
+        // console.log(productId, productName, productPrice);
+        // Sử dụng jQuery
+        $.ajax({
+            type: 'POST',
+            // Đường dẫ tới tệp PHP xử lý dữ liệu
+            url: './view/addToCart.php',
+            data: {
+                id: productId,
+                name: productName,
+                price: productPrice
+            },
+            success: function(response) {
+                totalProduct.innerText = response;
+                alert('Bạn đã thêm sản phẩm vào giỏ hàng thành công!')
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    }
+</script>
