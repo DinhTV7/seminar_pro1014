@@ -42,7 +42,7 @@ if (empty($dataDb)) {
                         <?= number_format((int)$product['price'] * (int)$quantityInCart, 0, ",", ".") ?> <u>đ</u>
                     </td>
                     <td>
-                        <button>Xóa</button>
+                        <button onclick="removeFormCart(<?= $product['id'] ?>)">Xóa</button>
                     </td>
                 </tr>
             <?php
@@ -90,15 +90,37 @@ if (empty($dataDb)) {
                 id: id,
                 quantity: newQuantity
             },
-            success: function(response){
+            success: function(response) {
                 // Sau khi cập nhật thành công
-                $.post('view/tableCartOrder.php', function (data) {
+                $.post('view/tableCartOrder.php', function(data) {
                     $('#order').html(data);
                 })
             },
-            error: function(error){
+            error: function(error) {
                 console.log(error);
-            }, 
+            },
         })
+    }
+
+    function removeFormCart(id) {
+        if (confirm("Bạn có đồng ý xóa sản phẩm hay không?")) {
+            // Gửi yêu cầu bằng ajax để cập nhật giỏ hàng
+            $.ajax({
+                type: 'POST',
+                url: './view/removeFormCart.php',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    // Sau khi cập nhật thành công
+                    $.post('view/tableCartOrder.php', function(data) {
+                        $('#order').html(data);
+                    })
+                },
+                error: function(error) {
+                    console.log(error);
+                },
+            })
+        }
     }
 </script>
