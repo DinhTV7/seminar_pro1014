@@ -4,6 +4,7 @@ include "model/pdo.php";
 include "model/sanpham.php";
 include "model/taikhoan.php";
 include "model/danhmuc.php";
+include "model/order.php";
 include "global.php";
 $sanpham = loadall_sanpham_home();
 $dsdm = loadall_danhmuc();
@@ -44,8 +45,44 @@ if ((isset($_GET['act'])) && ($_GET['act'] != "")) {
             $tendm = load_ten_dm($iddm);
             include "view/sanpham.php";
             break;
+        case "order":
+            if (isset($_SESSION['cart'])) {
+                $cart = $_SESSION['cart'];
+                // print_r($cart);
+                if (isset($_POST['order_confirm'])) {
+                    $txthoten = $_POST['txthoten'];
+                    $txttel = $_POST['txttel'];
+                    $txtemail = $_POST['txtemail'];
+                    $txtaddress = $_POST['txtaddress'];
+                    $pttt = $_POST['pttt'];
+                    // date_default_timezone_set('Asia/Ho_Chi_Minh');
+                    // $currentDateTime = date('Y-m-d H:i:s');
+                    if (isset($_SESSION['user'])) {
+                        $id_user = $_SESSION['user']['id'];
+                    } else {
+                        $id_user = 0;
+                    }
+                    $idBill = addOrder($id_user, $txthoten, $txttel, $txtemail, $txtaddress, $_SESSION['resultTotal'], $pttt);
+                    foreach ($cart as $item) {
+                        addOrderDetail($idBill, $item['id'], $item['price'], $item['quantity'], $item['price'] * $item['quantity']);
+                    }
+                    unset($_SESSION['cart']);
+                    $_SESSION['success'] = $idBill;
+                    header("Location: index.php?act=success");
+                }
+                include "view/order.php";
+            } else {
+                header("Location: index.php?act=listCart");
+            }
+            break;
+        case "success":
+            if (isset($_SESSION['success'])) {
+                include 'view/success.php';
+            } else {
+                header("Location: index.php");
+            }
+            break;
         case "sanphamct":
-
             if (isset($_GET['idsp']) && ($_GET['idsp'] > 0)) {
                 $id = $_GET['idsp'];
                 $sp_cung_loai = load_sanpham_cungloai($id);
@@ -54,7 +91,6 @@ if ((isset($_GET['act'])) && ($_GET['act'] != "")) {
             } else {
                 include "view/home.php";
             }
-
             break;
         case "dangky":
             if (isset($_POST['dangky']) && ($_POST['dangky'])) {
@@ -95,7 +131,6 @@ if ((isset($_GET['act'])) && ($_GET['act'] != "")) {
 
                 header('Location: index.php?act=edit_taikhoan');
             }
-
             include "view/taikhoan/edit_taikhoan.php";
             break;
         case "quenmk":
@@ -108,7 +143,6 @@ if ((isset($_GET['act'])) && ($_GET['act'] != "")) {
                     $thongbao = "Email này không tồn tại";
                 }
             }
-
             include "view/taikhoan/quenmk.php";
             break;
         case "thoat":

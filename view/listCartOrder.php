@@ -68,6 +68,10 @@ if (empty($dataDb)) {
             </tr>
         </tbody>
     </table>
+    <br>
+    <form action="index.php?act=order" method="post">
+        <input type="submit" style="padding:10px;" name="order" value="Đặt Hàng">
+    </form>
 <?php
 }
 ?>
